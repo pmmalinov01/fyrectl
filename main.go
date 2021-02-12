@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	masscot.FyreStatus()
+	start.FyreStatus()
 	fmt.Println()
 	fmt.Println(quote.Go())
 
