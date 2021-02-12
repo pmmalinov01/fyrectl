@@ -7,7 +7,6 @@ import (
 )
 
 func main() {
-	start.FyreStatus()
 	fmt.Println()
 	fmt.Println(quote.Go())
 

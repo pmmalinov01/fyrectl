@@ -1,4 +1,4 @@
-module fyrectl
+module github.com/pmmalinov01/fyrectl
 
 go 1.15
 
