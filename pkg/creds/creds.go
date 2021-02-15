@@ -6,8 +6,8 @@ import (
 )
 
 type userCreds struct {
-	userName string
-	apiKey   string
+	UserName string
+	ApiKey   string
 }
 
 func GetCreds() (userCreds, error) {
@@ -22,7 +22,7 @@ func GetCreds() (userCreds, error) {
 	if !ok {
 		return user, errors.New("Variable APIKEY not set")
 	}
-	user.apiKey = ps
-	user.userName = un
+	user.ApiKey = ps
+	user.UserName = un
 	return user, nil
 }

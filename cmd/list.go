@@ -16,13 +16,16 @@ limitations under the License.
 package cmd
 
 import (
+	"bytes"
 	"crypto/tls"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
 
+	"github.com/pmmalinov01/fyrectl/pkg/creds"
 	"github.com/spf13/cobra"
 )
 
@@ -38,16 +41,15 @@ var listCmd = &cobra.Command{
 	List your stacks
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list called")
 		reqBody1 := strings.NewReader(``)
 		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 
 		req, _ := http.NewRequest("GET", statusFyreCluster, reqBody1)
-		uCreds, err := GetCreds()
+		uCreds, err := creds.GetCreds()
 		if err != nil {
 			log.Fatal(err)
 		}
-		req.SetBasicAuth(uCreds.userName, uCreds.apiKey)
+		req.SetBasicAuth(uCreds.UserName, uCreds.ApiKey)
 
 		res, err := http.DefaultClient.Do(req)
 		if err != nil {
@@ -56,8 +58,13 @@ var listCmd = &cobra.Command{
 
 		data, _ := ioutil.ReadAll(res.Body)
 		res.Body.Close()
-		fmt.Println(res.StatusCode)
-		fmt.Printf("%s", data)
+		var prettyJSON bytes.Buffer
+		error := json.Indent(&prettyJSON, data, "", "\t")
+		if error != nil {
+			log.Println("JSON parse error", error)
+
+		}
+		fmt.Println(string(prettyJSON.Bytes()))
 	},
 }
 
