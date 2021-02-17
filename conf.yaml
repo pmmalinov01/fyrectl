@@ -1,0 +1,7 @@
+type: "simple"
+cluster_prefix: "mycluster"
+instance_type: "virtual_server"
+size: "m"
+platform: "x"
+os: "Redhat 7.9"
+count: "1"
