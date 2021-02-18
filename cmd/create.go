@@ -34,6 +34,8 @@ const (
 	createFyreCluster = "https://api.fyre.ibm.com/rest/v1/?operation=build"
 )
 
+var ConfFile string
+
 // createCmd represents the create command
 var createCmd = &cobra.Command{
 	Use:   "create",
@@ -45,8 +47,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("create called")
-		content, err := ioutil.ReadFile("conf.yaml")
+		content, err := ioutil.ReadFile(ConfFile)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -84,6 +85,7 @@ to quickly create a Cobra application.`,
 
 func init() {
 	rootCmd.AddCommand(createCmd)
+	createCmd.PersistentFlags().StringVarP(&ConfFile, "conf", "c", "", "Passes the configuration to create the fyre cluster")
 
 	// Here you will define your flags and configuration settings.
 
