@@ -26,6 +26,7 @@ import (
 	"strings"
 
 	"github.com/pmmalinov01/fyrectl/pkg/creds"
+	"github.com/pmmalinov01/fyrectl/pkg/utils"
 	"github.com/spf13/cobra"
 	"sigs.k8s.io/yaml"
 )
@@ -80,12 +81,14 @@ to quickly create a Cobra application.`,
 
 		}
 		fmt.Println(string(prettyJSON.Bytes()))
+		utils.CreateClStatus(data)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(createCmd)
-	createCmd.PersistentFlags().StringVarP(&ConfFile, "conf", "c", "", "Passes the configuration to create the fyre cluster")
+	createCmd.Flags().StringVarP(&ConfFile, "conf", "c", "", "Passes the configuration to create the fyre cluster")
+	createCmd.MarkFlagRequired("conf")
 
 	// Here you will define your flags and configuration settings.
 
