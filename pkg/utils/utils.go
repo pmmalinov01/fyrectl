@@ -3,6 +3,7 @@ package utils
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 )
@@ -36,12 +37,12 @@ func (c *ClusterC) GetDetailsURL() string {
 	return c.Details
 }
 
-func CreateClStatus(Url []byte) {
+func CreateClStatus(Url []byte) (string, error) {
 	var cluster ClusterC
 	isValid := json.Valid(Url)
-	fmt.Println(isValid)
-	fmt.Printf("Error: %v\n", json.Unmarshal(Url, &cluster))
-
-	fmt.Println(cluster.GetStatus())
-	fmt.Println(cluster.GetDetailsURL())
+	if !isValid {
+		return "", errors.New("JSON is not Valid")
+	}
+	json.Unmarshal(Url, &cluster)
+	return cluster.GetRID(), nil
 }

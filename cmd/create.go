@@ -16,15 +16,14 @@ limitations under the License.
 package cmd
 
 import (
-	"bytes"
 	"crypto/tls"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
 
+	"github.com/pmmalinov01/fyrectl/pkg/clusterstatus"
 	"github.com/pmmalinov01/fyrectl/pkg/creds"
 	"github.com/pmmalinov01/fyrectl/pkg/utils"
 	"github.com/spf13/cobra"
@@ -74,14 +73,13 @@ to quickly create a Cobra application.`,
 
 		data, _ := ioutil.ReadAll(res.Body)
 		res.Body.Close()
-		var prettyJSON bytes.Buffer
-		error := json.Indent(&prettyJSON, data, "", "\t")
-		if error != nil {
-			log.Println("JSON parse error", error)
-
+		requestID, err := utils.CreateClStatus(data)
+		if err != nil {
+			log.Fatal(err)
 		}
-		fmt.Println(string(prettyJSON.Bytes()))
-		utils.CreateClStatus(data)
+		fmt.Println(requestID)
+
+		clusterstatus.ClientR(requestID)
 	},
 }
 

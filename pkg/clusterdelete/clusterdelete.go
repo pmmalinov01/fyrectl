@@ -1,7 +1,9 @@
-package req
+package clusterdelete
 
 import (
 	"crypto/tls"
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -11,13 +13,20 @@ import (
 	"github.com/pmmalinov01/fyrectl/pkg/utils"
 )
 
-var ClusterStatus string = "https://api.fyre.ibm.com/rest/v1/?operation=query&request=showrequests&request_id="
+var ClusterDelete string = "https://api.fyre.ibm.com/rest/v1/?operation=delete"
 
-func ClientR(reqID string) {
-	reqBody1 := strings.NewReader(``)
+func DeleteCl(ClName string) {
+	r := map[string]string{"cluster_name": ClName}
+	reqBodyJSON, err := json.Marshal(r)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(reqBodyJSON)
+
+	reqBody1 := strings.NewReader(string(reqBodyJSON))
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 
-	req, _ := http.NewRequest("GET", ClusterStatus+reqID, reqBody1)
+	req, _ := http.NewRequest("POST", ClusterDelete, reqBody1)
 	uCreds, err := creds.GetCreds()
 	if err != nil {
 		log.Fatal(err)
