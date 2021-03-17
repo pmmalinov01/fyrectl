@@ -16,16 +16,16 @@ limitations under the License.
 package cmd
 
 import (
-	"bytes"
 	"crypto/tls"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
 
+	"github.com/pmmalinov01/fyrectl/pkg/clusterstatus"
 	"github.com/pmmalinov01/fyrectl/pkg/creds"
+	"github.com/pmmalinov01/fyrectl/pkg/utils"
 	"github.com/spf13/cobra"
 	"sigs.k8s.io/yaml"
 )
@@ -33,6 +33,8 @@ import (
 const (
 	createFyreCluster = "https://api.fyre.ibm.com/rest/v1/?operation=build"
 )
+
+var ConfFile string
 
 // createCmd represents the create command
 var createCmd = &cobra.Command{
@@ -45,8 +47,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("create called")
-		content, err := ioutil.ReadFile("conf.yaml")
+		content, err := ioutil.ReadFile(ConfFile)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -72,18 +73,19 @@ to quickly create a Cobra application.`,
 
 		data, _ := ioutil.ReadAll(res.Body)
 		res.Body.Close()
-		var prettyJSON bytes.Buffer
-		error := json.Indent(&prettyJSON, data, "", "\t")
-		if error != nil {
-			log.Println("JSON parse error", error)
-
+		requestID, err := utils.CreateClStatus(data)
+		fmt.Println(requestID)
+		if err != nil {
+			log.Fatal(err)
 		}
-		fmt.Println(string(prettyJSON.Bytes()))
+		clusterstatus.ClientR(requestID)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(createCmd)
+	createCmd.Flags().StringVarP(&ConfFile, "conf", "c", "", "Passes the configuration to create the fyre cluster")
+	createCmd.MarkFlagRequired("conf")
 
 	// Here you will define your flags and configuration settings.
 

@@ -16,16 +16,14 @@ limitations under the License.
 package cmd
 
 import (
-	"bytes"
 	"crypto/tls"
-	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
 
 	"github.com/pmmalinov01/fyrectl/pkg/creds"
+	"github.com/pmmalinov01/fyrectl/pkg/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -37,9 +35,6 @@ const (
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List vm clusters",
-	Long: `
-	List your stacks
-`,
 	Run: func(cmd *cobra.Command, args []string) {
 		reqBody1 := strings.NewReader(``)
 		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
@@ -58,13 +53,7 @@ var listCmd = &cobra.Command{
 
 		data, _ := ioutil.ReadAll(res.Body)
 		res.Body.Close()
-		var prettyJSON bytes.Buffer
-		error := json.Indent(&prettyJSON, data, "", "\t")
-		if error != nil {
-			log.Println("JSON parse error", error)
-
-		}
-		fmt.Println(string(prettyJSON.Bytes()))
+		utils.PrettyJSON(data)
 	},
 }
 
