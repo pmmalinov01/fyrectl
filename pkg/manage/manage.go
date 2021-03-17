@@ -16,6 +16,7 @@ var (
 	ClusterBoot   string = "https://api.fyre.ibm.com/rest/v1/?operation=boot&cluster_name="
 	ClusterReBoot string = "https://api.fyre.ibm.com/rest/v1/?operation=reboot&cluster_name="
 	ClusterStop   string = "https://api.fyre.ibm.com/rest/v1/?operation=shutdown&cluster_name="
+	ClusterQuery  string = "https://api.fyre.ibm.com/rest/v1/?operation=query&request=showclusterdetails&cluster_name="
 )
 
 func clientcall(op string) {
@@ -39,18 +40,27 @@ func clientcall(op string) {
 
 }
 
-func State(cluster_name, operation string) {
+func State(cluster_name, operation string) (string, error) {
 
 	switch operation {
 	case "boot":
 		clientcall(ClusterBoot + cluster_name)
+		return "", nil
 	case "reboot":
 		clientcall(ClusterReBoot + cluster_name)
+		return "", nil
 	case "stop":
 		clientcall(ClusterStop + cluster_name)
+		return "", nil
 	case "force_stop":
 		out := fmt.Sprintf("api.fyre.ibm.com/rest/v1/?operation=shutdown&cluster_name=%s[&shutdown_type=pull_the_plug", cluster_name)
 		clientcall(out)
+		return "", nil
+	case "query":
+		clientcall(ClusterQuery + cluster_name)
+		return "", nil
+
 	}
 
+	return "", nil
 }
