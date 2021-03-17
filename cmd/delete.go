@@ -16,8 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/pmmalinov01/fyrectl/pkg/clusterdelete"
 	"github.com/spf13/cobra"
 )
@@ -29,7 +27,6 @@ var deleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "A brief description of your command",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("delete called")
 		clusterdelete.DeleteCl(ClName)
 
 	},

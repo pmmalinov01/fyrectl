@@ -13,6 +13,8 @@ import (
 
 var ClusterStatus string = "https://api.fyre.ibm.com/rest/v1/?operation=query&request=showrequests&request_id="
 
+//ClientR returns a details about a made call to the API
+//It can be from a simple delete or from create call
 func ClientR(reqID string) {
 	reqBody1 := strings.NewReader(``)
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}

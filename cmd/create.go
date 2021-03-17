@@ -74,11 +74,10 @@ to quickly create a Cobra application.`,
 		data, _ := ioutil.ReadAll(res.Body)
 		res.Body.Close()
 		requestID, err := utils.CreateClStatus(data)
+		fmt.Println(requestID)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(requestID)
-
 		clusterstatus.ClientR(requestID)
 	},
 }
